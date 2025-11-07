@@ -8,7 +8,7 @@ import java.sql.SQLException;
 public class Conexao {
     
     //url de acesso:
-    private static final String URL = "\"jdbc:mysql://localhost:3306/estoque_db?useSSL=false&serverTimezone=UTC\";";
+    private static final String URL = "jdbc:mysql://localhost:3306/estoque_db?useSSL=false&serverTimezone=UTC";
     
     //usuario de acesso:
     private static final String USUARIO = "root";
