@@ -64,5 +64,4 @@ public class Produto {
         this.data_cadastro = data_cadastro;
     }
     
- 
 }
