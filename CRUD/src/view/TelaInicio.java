@@ -90,11 +90,11 @@ if (opcao.equals("Selecione...")) {
 }
 switch (opcao) {
     case "Cadastrar Produto" -> {
-        new TelaCadastrarProduto().setVisible(true);   
+        new CadastroProduto().setVisible(true);   
             }
 
     case "Estoque" -> {
-        new TelaEstoque().setVisible(true);     
+        new Estoque().setVisible(true);     
             }
 
     default -> {

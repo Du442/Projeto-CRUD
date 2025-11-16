@@ -1,7 +1,7 @@
-
 package main;
 
 import connection.Conexao;
+import view.TelaInicio;
 
 public class Main {
 
@@ -12,6 +12,8 @@ public class Main {
         } else {
             System.out.println("FALHA! Verifique o console de erro.");
         }
-    }
-    
+ 
+    TelaInicio objetotela = new TelaInicio();
+        objetotela.setVisible(true);
+}
 }

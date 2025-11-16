@@ -1,20 +1,52 @@
-
 package model;
 
+import dao.ProdutoDAO;
 import java.math.BigDecimal;
+import java.sql.SQLException;
 import java.util.Date;
+import java.util.List;
 
 public class Produto {
-    
-    //esses sao os atributos literalmente iguais aos da table
+
+    // Atributos (iguais à tabela)
     private int id_produto;
     private String nome_produto;
     private String descricao_produto;
     private int quantidade_estoque;
-    private BigDecimal preco; // usar bigdecimal para dinheiro em java(pesquisei e aparentemente eh melhor)
+    private BigDecimal preco;
     private Date data_cadastro;
-    
-    public Produto(){}
+
+    // DAO (igual funciona na classe Aluno)
+    private final ProdutoDAO dao;
+
+    // Construtor vazio
+    public Produto() {
+        this.dao = new ProdutoDAO();
+    }
+
+    // Construtor básico
+    public Produto(String nome, String descricao, int quantidade, BigDecimal preco) {
+        this.nome_produto = nome;
+        this.descricao_produto = descricao;
+        this.quantidade_estoque = quantidade;
+        this.preco = preco;
+        this.dao = new ProdutoDAO();
+    }
+
+    // Construtor completo
+    public Produto(int id, String nome, String descricao, int quantidade, BigDecimal preco, Date dataCadastro) {
+        this.id_produto = id;
+        this.nome_produto = nome;
+        this.descricao_produto = descricao;
+        this.quantidade_estoque = quantidade;
+        this.preco = preco;
+        this.data_cadastro = dataCadastro;
+        this.dao = new ProdutoDAO();
+    }
+
+    // ------------------------
+    // GETTERS E SETTERS
+    // ------------------------
 
     public int getId_produto() {
         return id_produto;
@@ -63,6 +95,81 @@ public class Produto {
     public void setData_cadastro(Date data_cadastro) {
         this.data_cadastro = data_cadastro;
     }
-    
- 
+
+    @Override
+    public String toString() {
+        return "\n ID: " + this.id_produto
+                + "\n Nome: " + this.nome_produto
+                + "\n Descrição: " + this.descricao_produto
+                + "\n Quantidade: " + this.quantidade_estoque
+                + "\n Preço: " + this.preco
+                + "\n -----------";
+    }
+
+    // ======================================================
+    //  MÉTODOS ESTILO ALUNO — SÓ QUE PARA PRODUTO
+    // ======================================================
+
+    // Retorna lista de produtos
+    public List<Produto> getMinhaLista() {
+        return dao.listarProdutos();
+    }
+
+    // Insere novo produto
+    public boolean InsertProdutoBD(String nome, String descricao, int quantidade, BigDecimal preco) throws SQLException {
+        int id = this.maiorID() + 1;
+
+        Produto p = new Produto();
+        p.setId_produto(id);
+        p.setNome_produto(nome);
+        p.setDescricao_produto(descricao);
+        p.setQuantidade_estoque(quantidade);
+        p.setPreco(preco);
+
+        dao.adicionarProduto(p);
+        return true;
+    }
+
+    // Deleta um produto pelo ID
+    public boolean DeleteProdutoBD(int id) {
+        return dao.removerProduto(id);
+    }
+
+    // Atualiza produto
+    public boolean UpdateProdutoBD(int id, String nome, String descricao, int quantidade, BigDecimal preco) {
+        Produto p = new Produto();
+        p.setId_produto(id);
+        p.setNome_produto(nome);
+        p.setDescricao_produto(descricao);
+        p.setQuantidade_estoque(quantidade);
+        p.setPreco(preco);
+
+        return dao.atualizarProduto(p);
+    }
+
+    // Carrega um produto específico pelo ID
+    public Produto carregaProduto(int id) {
+
+        for (Produto p : dao.listarProdutos()) {
+            if (p.getId_produto() == id) {
+                return p;
+            }
+        }
+
+        return null;
+    }
+
+    // Retorna o maior ID atual
+    public int maiorID() {
+
+        int maior = 0;
+
+        for (Produto p : dao.listarProdutos()) {
+            if (p.getId_produto() > maior) {
+                maior = p.getId_produto();
+            }
+        }
+
+        return maior;
+    }
 }

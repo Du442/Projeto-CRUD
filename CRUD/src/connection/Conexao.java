@@ -8,13 +8,13 @@ import java.sql.SQLException;
 public class Conexao {
     
     //url de acesso:
-    private static final String URL = "\"jdbc:mysql://localhost:3306/estoque_db?useSSL=false&serverTimezone=UTC\";";
+    private static final String URL = "jdbc:mysql://localhost:3306/estoque_db?useSSL=false&serverTimezone=UTC";
     
     //usuario de acesso:
     private static final String USUARIO = "root";
     
     //senha de acesso:
-    private static final String SENHA = "Du44xdoda@";
+    private static final String SENHA = "root";
     
     //driver que eu baixei:
     private static final String DRIVER = "com.mysql.cj.jdbc.Driver";
