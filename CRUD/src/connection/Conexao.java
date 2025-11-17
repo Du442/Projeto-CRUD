@@ -14,7 +14,7 @@ public class Conexao {
     private static final String USUARIO = "root";
     
     //senha de acesso:
-    private static final String SENHA = "root";
+    private static final String SENHA = "Du44xdoda@";
     
     //driver que eu baixei:
     private static final String DRIVER = "com.mysql.cj.jdbc.Driver";

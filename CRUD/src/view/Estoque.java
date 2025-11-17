@@ -6,6 +6,8 @@ import model.Produto;
 import java.util.*;
 import javax.swing.JOptionPane;
 import javax.swing.table.DefaultTableModel;
+import java.text.NumberFormat;
+import java.util.Locale;
 
 public class Estoque extends javax.swing.JFrame {
 
@@ -309,25 +311,37 @@ public class Estoque extends javax.swing.JFrame {
     }//GEN-LAST:event_b_apagarActionPerformed
 
     @SuppressWarnings("unchecked")
- public void carregaTabela() {
+    
+private NumberFormat formatador = NumberFormat.getCurrencyInstance(new Locale("pt", "BR"));
+    
+@SuppressWarnings("unchecked")
+    public void carregaTabela() {
+        
+        DefaultTableModel modelo = (DefaultTableModel) this.jTableProdutos.getModel();
+        modelo.setNumRows(0);
 
-    DefaultTableModel modelo = (DefaultTableModel) this.jTableProdutos.getModel();
-    modelo.setNumRows(0);
+        ProdutoDAO dao = new ProdutoDAO();
+        List<Produto> produtos = dao.listarProdutos();
 
-   ProdutoDAO dao = new ProdutoDAO();
-    List<Produto> produtos = dao.listarProdutos();
-
-
-    for (Produto p : produtos) {
-        modelo.addRow(new Object[]{
-            p.getId_produto(),
-            p.getNome_produto(),
-            p.getDescricao_produto(),
-            p.getQuantidade_estoque(),
-            p.getPreco()
-        });
+        // Loop para percorrer cada produto da lista
+        for (Produto p : produtos) {
+            
+            // --- MUDANÇA 1 ---
+            // Pega o número (ex: 149.90) e usa o 'formatador' para
+            // transformar em texto (ex: "R$ 149,90")
+            String precoFormatado = formatador.format(p.getPreco());
+            
+            // --- MUDANÇA 2 ---
+            // Adiciona a linha na tabela, mas agora passando o 'precoFormatado'
+            modelo.addRow(new Object[]{
+                p.getId_produto(),
+                p.getNome_produto(),
+                p.getDescricao_produto(),
+                p.getQuantidade_estoque(),
+                precoFormatado  // <-- Aqui está a mudança!
+            });
         }
-    }
+}
 
     public static void main(String args[]) {
         /* Set the Nimbus look and feel */

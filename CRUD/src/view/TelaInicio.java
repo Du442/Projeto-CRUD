@@ -49,8 +49,7 @@ public class TelaInicio extends javax.swing.JFrame {
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
         setTitle("Tela Inicial");
-        setBackground(new java.awt.Color(255, 255, 255));
-        setPreferredSize(new java.awt.Dimension(600, 500));
+        setBackground(new java.awt.Color(0, 0, 0));
         setResizable(false);
 
         jComboBox2.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Selecione...", "Cadastrar Produto", "Estoque" }));
