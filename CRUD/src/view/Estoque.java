@@ -98,10 +98,18 @@ public class Estoque extends javax.swing.JFrame {
         });
         jScrollPane1.setViewportView(jTableProdutos);
         if (jTableProdutos.getColumnModel().getColumnCount() > 0) {
-            jTableProdutos.getColumnModel().getColumn(0).setMinWidth(30);
-            jTableProdutos.getColumnModel().getColumn(1).setMinWidth(200);
-            jTableProdutos.getColumnModel().getColumn(2).setMinWidth(30);
-            jTableProdutos.getColumnModel().getColumn(3).setMinWidth(100);
+            jTableProdutos.getColumnModel().getColumn(0).setResizable(false);
+            jTableProdutos.getColumnModel().getColumn(0).setPreferredWidth(30);
+            jTableProdutos.getColumnModel().getColumn(1).setResizable(false);
+            jTableProdutos.getColumnModel().getColumn(1).setPreferredWidth(150);
+            jTableProdutos.getColumnModel().getColumn(2).setResizable(false);
+            jTableProdutos.getColumnModel().getColumn(2).setPreferredWidth(100);
+            jTableProdutos.getColumnModel().getColumn(3).setResizable(false);
+            jTableProdutos.getColumnModel().getColumn(3).setPreferredWidth(100);
+            jTableProdutos.getColumnModel().getColumn(4).setResizable(false);
+            jTableProdutos.getColumnModel().getColumn(4).setPreferredWidth(50);
+            jTableProdutos.getColumnModel().getColumn(5).setResizable(false);
+            jTableProdutos.getColumnModel().getColumn(5).setPreferredWidth(150);
         }
 
         b_cancelar.setText("Cancelar");
@@ -147,40 +155,39 @@ public class Estoque extends javax.swing.JFrame {
             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
                 .addGap(20, 20, 20)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
-                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addGroup(layout.createSequentialGroup()
-                                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                                    .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING, false)
-                                        .addComponent(jLabel2, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                                        .addComponent(jLabel4, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                                        .addComponent(jLabel1, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.PREFERRED_SIZE, 47, javax.swing.GroupLayout.PREFERRED_SIZE))
-                                    .addComponent(jLabel3))
-                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING, false)
-                                    .addComponent(c_descricao, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, 194, Short.MAX_VALUE)
-                                    .addComponent(c_quantidade, javax.swing.GroupLayout.Alignment.LEADING)
-                                    .addComponent(c_preco)
-                                    .addComponent(c_nome)))
+                    .addGroup(layout.createSequentialGroup()
+                        .addGap(0, 0, Short.MAX_VALUE)
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
                             .addGroup(layout.createSequentialGroup()
                                 .addComponent(b_cancelar)
                                 .addGap(18, 18, 18)
                                 .addComponent(b_alterar)
                                 .addGap(18, 18, 18)
-                                .addComponent(b_apagar)))
-                        .addGap(174, 174, 174))
-                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
-                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
-                            .addComponent(jScrollPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 739, Short.MAX_VALUE)
-                            .addComponent(btnExportar))
-                        .addGap(14, 14, 14))))
+                                .addComponent(b_apagar))
+                            .addGroup(layout.createSequentialGroup()
+                                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                                    .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING, false)
+                                        .addComponent(jLabel2, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                                        .addComponent(jLabel4, javax.swing.GroupLayout.PREFERRED_SIZE, 54, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                        .addComponent(jLabel1, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.PREFERRED_SIZE, 47, javax.swing.GroupLayout.PREFERRED_SIZE))
+                                    .addComponent(jLabel3))
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING, false)
+                                    .addComponent(c_descricao, javax.swing.GroupLayout.Alignment.LEADING)
+                                    .addComponent(c_quantidade, javax.swing.GroupLayout.Alignment.LEADING)
+                                    .addComponent(c_preco)
+                                    .addComponent(c_nome, javax.swing.GroupLayout.PREFERRED_SIZE, 194, javax.swing.GroupLayout.PREFERRED_SIZE))))
+                        .addGap(126, 126, 126)
+                        .addComponent(btnExportar))
+                    .addComponent(jScrollPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 739, Short.MAX_VALUE))
+                .addGap(14, 14, 14))
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
                 .addGap(20, 20, 20)
                 .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 151, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(54, 54, 54)
+                .addGap(49, 49, 49)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(c_nome, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(jLabel1))
@@ -196,14 +203,13 @@ public class Estoque extends javax.swing.JFrame {
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(c_preco, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(jLabel4))
-                .addGap(31, 31, 31)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 46, Short.MAX_VALUE)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(b_cancelar)
                     .addComponent(b_alterar)
-                    .addComponent(b_apagar))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(btnExportar)
-                .addContainerGap(15, Short.MAX_VALUE))
+                    .addComponent(b_apagar)
+                    .addComponent(btnExportar))
+                .addGap(38, 38, 38))
         );
 
         pack();
@@ -465,7 +471,7 @@ private NumberFormat formatador = NumberFormat.getCurrencyInstance(new Locale("p
   
             String precoFormatado = formatador.format(p.getPreco());
             
-         DateTimeFormatter f = DateTimeFormatter.ofPattern("dd/MM/yyyy HH:mm");
+         DateTimeFormatter f = DateTimeFormatter.ofPattern("dd/MM/yyyy HH:mm:ss");
 
             LocalDateTime dataFormatada = p.getData_cadastro()
             .toInstant()
