@@ -27,6 +27,9 @@ import com.itextpdf.text.BaseColor;
 import com.itextpdf.text.Element;
 import java.io.FileOutputStream;
 import java.awt.Desktop;
+import java.time.LocalDateTime;
+import java.time.ZoneId;
+import java.time.format.DateTimeFormatter;
 
 public class Estoque extends javax.swing.JFrame {
 
@@ -67,21 +70,21 @@ public class Estoque extends javax.swing.JFrame {
 
         jTableProdutos.setModel(new javax.swing.table.DefaultTableModel(
             new Object [][] {
-                {null, null, null, null, null},
-                {null, null, null, null, null},
-                {null, null, null, null, null},
-                {null, null, null, null, null},
-                {null, null, null, null, null},
-                {null, null, null, null, null},
-                {null, null, null, null, null},
-                {null, null, null, null, null}
+                {null, null, null, null, null, null},
+                {null, null, null, null, null, null},
+                {null, null, null, null, null, null},
+                {null, null, null, null, null, null},
+                {null, null, null, null, null, null},
+                {null, null, null, null, null, null},
+                {null, null, null, null, null, null},
+                {null, null, null, null, null, null}
             },
             new String [] {
-                "ID", "Nome", "Descrição", "Quantidade", "Preço"
+                "ID", "Nome", "Descrição", "Quantidade", "Preço", "Data de Cadastro"
             }
         ) {
             boolean[] canEdit = new boolean [] {
-                false, false, false, false, false
+                false, false, false, false, false, false
             };
 
             public boolean isCellEditable(int rowIndex, int columnIndex) {
@@ -141,12 +144,8 @@ public class Estoque extends javax.swing.JFrame {
         getContentPane().setLayout(layout);
         layout.setHorizontalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(layout.createSequentialGroup()
-                .addGap(20, 20, 20)
-                .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 522, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addContainerGap(26, Short.MAX_VALUE))
             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
-                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                .addGap(20, 20, 20)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
                         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -171,7 +170,9 @@ public class Estoque extends javax.swing.JFrame {
                                 .addComponent(b_apagar)))
                         .addGap(174, 174, 174))
                     .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
-                        .addComponent(btnExportar)
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
+                            .addComponent(jScrollPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 739, Short.MAX_VALUE)
+                            .addComponent(btnExportar))
                         .addGap(14, 14, 14))))
         );
         layout.setVerticalGroup(
@@ -192,9 +193,9 @@ public class Estoque extends javax.swing.JFrame {
                     .addComponent(c_quantidade, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(jLabel3))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
-                    .addComponent(jLabel4)
-                    .addComponent(c_preco, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(c_preco, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(jLabel4))
                 .addGap(31, 31, 31)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(b_cancelar)
@@ -290,14 +291,14 @@ public class Estoque extends javax.swing.JFrame {
         if (this.jTableProdutos.getSelectedRow() != -1) {
 
             String nome = this.jTableProdutos.getValueAt(this.jTableProdutos.getSelectedRow(), 1).toString();
-            String idade = this.jTableProdutos.getValueAt(this.jTableProdutos.getSelectedRow(), 2).toString();
-            String curso = this.jTableProdutos.getValueAt(this.jTableProdutos.getSelectedRow(), 3).toString();
-            String fase = this.jTableProdutos.getValueAt(this.jTableProdutos.getSelectedRow(), 4).toString();
+            String descricao = this.jTableProdutos.getValueAt(this.jTableProdutos.getSelectedRow(), 2).toString();
+            String quantidade = this.jTableProdutos.getValueAt(this.jTableProdutos.getSelectedRow(), 3).toString();
+            String preco = this.jTableProdutos.getValueAt(this.jTableProdutos.getSelectedRow(), 4).toString();
 
             this.c_nome.setText(nome);
-            this.c_descricao.setText(idade);
-            this.c_quantidade.setText(curso);
-            this.c_preco.setText(fase);
+            this.c_descricao.setText(descricao);
+            this.c_quantidade.setText(quantidade);
+            this.c_preco.setText(preco);
 
         }
     }//GEN-LAST:event_jTableProdutosMouseClicked
@@ -464,12 +465,22 @@ private NumberFormat formatador = NumberFormat.getCurrencyInstance(new Locale("p
   
             String precoFormatado = formatador.format(p.getPreco());
             
+         DateTimeFormatter f = DateTimeFormatter.ofPattern("dd/MM/yyyy HH:mm");
+
+            LocalDateTime dataFormatada = p.getData_cadastro()
+            .toInstant()
+            .atZone(ZoneId.of("America/Sao_Paulo")) // corrige o fuso
+            .toLocalDateTime();
+
+            String dataExibida = dataFormatada.format(f);
+
             modelo.addRow(new Object[]{
                 p.getId_produto(),
                 p.getNome_produto(),
                 p.getDescricao_produto(),
                 p.getQuantidade_estoque(),
-                precoFormatado  
+                precoFormatado,
+                dataExibida
             });
         }
 }
