@@ -8,10 +8,29 @@ import javax.swing.JOptionPane;
 import javax.swing.table.DefaultTableModel;
 import java.text.NumberFormat;
 import java.util.Locale;
+import java.io.BufferedWriter;
+import java.io.File;
+import java.io.FileWriter;
+import java.io.IOException;
+import javax.swing.JFileChooser;
+import javax.swing.filechooser.FileNameExtensionFilter;
+import javax.swing.table.TableModel;
+import com.itextpdf.text.Document;
+import com.itextpdf.text.DocumentException;
+import com.itextpdf.text.Font;
+import com.itextpdf.text.PageSize;
+import com.itextpdf.text.Paragraph;
+import com.itextpdf.text.pdf.PdfPTable;
+import com.itextpdf.text.pdf.PdfPCell;
+import com.itextpdf.text.pdf.PdfWriter;
+import com.itextpdf.text.BaseColor;
+import com.itextpdf.text.Element;
+import java.io.FileOutputStream;
+import java.awt.Desktop;
 
 public class Estoque extends javax.swing.JFrame {
 
-    private Produto objprod; // cria o v�nculo com o objaluno
+    private Produto objprod; // cria o bjetoaluno
 
     public Estoque() {
         initComponents();
@@ -41,6 +60,7 @@ public class Estoque extends javax.swing.JFrame {
         c_quantidade = new javax.swing.JTextField();
         jLabel4 = new javax.swing.JLabel();
         c_preco = new javax.swing.JTextField();
+        btnExportar = new javax.swing.JButton();
 
         setTitle("Gerenciamento de Estoque");
         setResizable(false);
@@ -110,6 +130,13 @@ public class Estoque extends javax.swing.JFrame {
 
         jLabel4.setText("Preço:");
 
+        btnExportar.setText("Imprimir relatório");
+        btnExportar.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnExportarActionPerformed(evt);
+            }
+        });
+
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
         layout.setHorizontalGroup(
@@ -121,26 +148,31 @@ public class Estoque extends javax.swing.JFrame {
             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
                 .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addGroup(layout.createSequentialGroup()
+                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
                         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING, false)
-                                .addComponent(jLabel2, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                                .addComponent(jLabel4, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                                .addComponent(jLabel1, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.PREFERRED_SIZE, 47, javax.swing.GroupLayout.PREFERRED_SIZE))
-                            .addComponent(jLabel3))
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING, false)
-                            .addComponent(c_descricao, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, 194, Short.MAX_VALUE)
-                            .addComponent(c_quantidade, javax.swing.GroupLayout.Alignment.LEADING)
-                            .addComponent(c_preco)
-                            .addComponent(c_nome)))
-                    .addGroup(layout.createSequentialGroup()
-                        .addComponent(b_cancelar)
-                        .addGap(18, 18, 18)
-                        .addComponent(b_alterar)
-                        .addGap(18, 18, 18)
-                        .addComponent(b_apagar)))
-                .addGap(174, 174, 174))
+                            .addGroup(layout.createSequentialGroup()
+                                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                                    .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING, false)
+                                        .addComponent(jLabel2, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                                        .addComponent(jLabel4, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                                        .addComponent(jLabel1, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.PREFERRED_SIZE, 47, javax.swing.GroupLayout.PREFERRED_SIZE))
+                                    .addComponent(jLabel3))
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING, false)
+                                    .addComponent(c_descricao, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, 194, Short.MAX_VALUE)
+                                    .addComponent(c_quantidade, javax.swing.GroupLayout.Alignment.LEADING)
+                                    .addComponent(c_preco)
+                                    .addComponent(c_nome)))
+                            .addGroup(layout.createSequentialGroup()
+                                .addComponent(b_cancelar)
+                                .addGap(18, 18, 18)
+                                .addComponent(b_alterar)
+                                .addGap(18, 18, 18)
+                                .addComponent(b_apagar)))
+                        .addGap(174, 174, 174))
+                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
+                        .addComponent(btnExportar)
+                        .addGap(14, 14, 14))))
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -168,7 +200,9 @@ public class Estoque extends javax.swing.JFrame {
                     .addComponent(b_cancelar)
                     .addComponent(b_alterar)
                     .addComponent(b_apagar))
-                .addContainerGap(44, Short.MAX_VALUE))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(btnExportar)
+                .addContainerGap(15, Short.MAX_VALUE))
         );
 
         pack();
@@ -229,11 +263,10 @@ public class Estoque extends javax.swing.JFrame {
             produto.setQuantidade_estoque(quantidade);
             produto.setPreco(preco);
 
-            // envia os dados para o Aluno processar
+            // envia os dados pro aluno processa
             ProdutoDAO dao = new ProdutoDAO();
             if (dao.atualizarProduto(produto)) {
 
-            // limpar campos
            this.c_nome.setText("");
             this.c_descricao.setText("");
             this.c_quantidade.setText("");
@@ -247,7 +280,7 @@ public class Estoque extends javax.swing.JFrame {
             } catch (NumberFormatException erro2) {
                 JOptionPane.showMessageDialog(null, "Informe um número válido.");
             } finally {
-                 carregaTabela(); // atualiza tabela
+                 carregaTabela();
     }
         
     }//GEN-LAST:event_b_alterarActionPerformed
@@ -282,7 +315,6 @@ public class Estoque extends javax.swing.JFrame {
                     .toString());
         }
 
-            // retorna 0 -> primeiro bot�o | 1 -> segundo bot�o | 2 -> terceiro bot�o
            int resposta = JOptionPane.showConfirmDialog(null,
                 "Tem certeza que deseja apagar este produto?");
 
@@ -310,6 +342,111 @@ public class Estoque extends javax.swing.JFrame {
     }
     }//GEN-LAST:event_b_apagarActionPerformed
 
+   
+
+private void gerarRelatorioPDF(File file) throws IOException, DocumentException {
+    
+
+    TableModel model = jTableProdutos.getModel(); 
+
+
+    Document document = new Document(PageSize.A4.rotate(), 30, 30, 30, 30);
+    
+    PdfWriter.getInstance(document, new FileOutputStream(file));
+    
+
+    document.open();
+
+
+    Font fonteTitulo = new Font(Font.FontFamily.HELVETICA, 18, Font.BOLD);
+    Paragraph titulo = new Paragraph("Relatório de Estoque de Produtos", fonteTitulo);
+    titulo.setAlignment(Element.ALIGN_CENTER);
+    titulo.setSpacingAfter(20); // Espaço depois do título
+    document.add(titulo);
+
+    PdfPTable pdfTable = new PdfPTable(model.getColumnCount());
+    pdfTable.setWidthPercentage(100); 
+
+    Font fonteCabecalho = new Font(Font.FontFamily.HELVETICA, 12, Font.BOLD, BaseColor.WHITE);
+    
+    for (int i = 0; i < model.getColumnCount(); i++) {
+       
+        PdfPCell cell = new PdfPCell(new Paragraph(model.getColumnName(i), fonteCabecalho));
+        
+        cell.setBackgroundColor(BaseColor.GRAY);
+        cell.setHorizontalAlignment(Element.ALIGN_CENTER);
+        cell.setVerticalAlignment(Element.ALIGN_MIDDLE);
+        
+        pdfTable.addCell(cell);
+    }
+
+    
+    Font fonteDados = new Font(Font.FontFamily.HELVETICA, 10, Font.NORMAL);
+
+    for (int row = 0; row < model.getRowCount(); row++) {
+        for (int col = 0; col < model.getColumnCount(); col++) {
+           
+            Object value = model.getValueAt(row, col);
+            String texto = (value == null) ? "" : value.toString();
+            
+            
+            PdfPCell cell = new PdfPCell(new Paragraph(texto, fonteDados));
+            cell.setHorizontalAlignment(Element.ALIGN_LEFT);
+            cell.setPadding(4);
+           
+            pdfTable.addCell(cell);
+        }
+    }
+
+    document.add(pdfTable);
+    
+    document.close();
+}
+    
+    private void btnExportarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnExportarActionPerformed
+
+        
+        JFileChooser fileChooser = new JFileChooser();
+    fileChooser.setDialogTitle("Salvar Relatório PDF");
+    
+   
+    fileChooser.setFileFilter(new FileNameExtensionFilter("Arquivos PDF (*.pdf)", "pdf"));
+    
+    
+    fileChooser.setSelectedFile(new File("relatorio_estoque.pdf"));
+
+    int userSelection = fileChooser.showSaveDialog(this);
+
+    if (userSelection == JFileChooser.APPROVE_OPTION) {
+            File fileToSave = fileChooser.getSelectedFile();
+
+            
+            String filePath = fileToSave.getAbsolutePath();
+            if (!filePath.endsWith(".pdf")) {
+                fileToSave = new File(filePath + ".pdf");
+            }
+
+            try {
+                
+                gerarRelatorioPDF(fileToSave);
+
+                
+                int resposta = JOptionPane.showConfirmDialog(this, 
+                        "Relatório gerado com sucesso!\nDeseja abrir o arquivo?", 
+                        "Sucesso", JOptionPane.YES_NO_OPTION);
+
+                if (resposta == JOptionPane.YES_OPTION) {
+                    
+                    Desktop.getDesktop().open(fileToSave);
+                }
+
+            } catch (IOException | DocumentException ex) {
+                ex.printStackTrace();
+                JOptionPane.showMessageDialog(this, "Erro ao gerar o PDF: " + ex.getMessage(), "Erro", JOptionPane.ERROR_MESSAGE);
+            }
+        }
+    }//GEN-LAST:event_btnExportarActionPerformed
+
     @SuppressWarnings("unchecked")
     
 private NumberFormat formatador = NumberFormat.getCurrencyInstance(new Locale("pt", "BR"));
@@ -323,22 +460,16 @@ private NumberFormat formatador = NumberFormat.getCurrencyInstance(new Locale("p
         ProdutoDAO dao = new ProdutoDAO();
         List<Produto> produtos = dao.listarProdutos();
 
-        // Loop para percorrer cada produto da lista
         for (Produto p : produtos) {
-            
-            // --- MUDANÇA 1 ---
-            // Pega o número (ex: 149.90) e usa o 'formatador' para
-            // transformar em texto (ex: "R$ 149,90")
+  
             String precoFormatado = formatador.format(p.getPreco());
             
-            // --- MUDANÇA 2 ---
-            // Adiciona a linha na tabela, mas agora passando o 'precoFormatado'
             modelo.addRow(new Object[]{
                 p.getId_produto(),
                 p.getNome_produto(),
                 p.getDescricao_produto(),
                 p.getQuantidade_estoque(),
-                precoFormatado  // <-- Aqui está a mudança!
+                precoFormatado  
             });
         }
 }
@@ -381,6 +512,7 @@ private NumberFormat formatador = NumberFormat.getCurrencyInstance(new Locale("p
     private javax.swing.JButton b_alterar;
     private javax.swing.JButton b_apagar;
     private javax.swing.JButton b_cancelar;
+    private javax.swing.JButton btnExportar;
     private javax.swing.JTextField c_descricao;
     private javax.swing.JTextField c_nome;
     private javax.swing.JTextField c_preco;

@@ -18,6 +18,7 @@ public class TelaCadastrarProduto extends javax.swing.JFrame {
     
     jLabelProduto.setVisible(false);
     jComboProduto.setVisible(false); // começa invisível
+    
 
     }
 
@@ -136,11 +137,15 @@ if (categoriaSelecionada.equals("Bebidas")) {
             logger.log(java.util.logging.Level.SEVERE, null, ex);
         }
         //</editor-fold>
-
+        
         /* Create and display the form */
         java.awt.EventQueue.invokeLater(() -> new TelaCadastrarProduto().setVisible(true));
     }
 
+    
+    private javax.swing.JButton btnExportar;
+    private javax.swing.JScrollPane jScrollPane1;
+    private javax.swing.JTable jTableProdutos;
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JComboBox<String> jComboCategoria;
     private javax.swing.JComboBox<String> jComboProduto;
