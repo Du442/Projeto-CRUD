@@ -68,6 +68,34 @@ public class ProdutoDAO {
 
         return produtos;
     }
+    
+    public List<Produto> listarProdutosUltimoMes() {
+        
+        String sql = "SELECT * FROM produtos WHERE data_cadastro >= DATE_SUB(NOW(), INTERVAL 1 MONTH)";
+        
+        List <Produto> produtos = new ArrayList<>();
+        
+        try {
+            
+            Connection conn = Conexao.getConexao();
+            PreparedStatement pst = conn.prepareStatement(sql);
+            ResultSet rs = pst.executeQuery();
+            
+            while (rs.next()){
+                Produto p = new Produto();
+                p.setId_produto(rs.getInt("id_produto"));
+                p.setNome_produto(rs.getString("nome_produto"));
+                p.setDescricao_produto(rs.getString("descricao_produto"));
+                p.setQuantidade_estoque(rs.getInt("quantidade_estoque"));
+                p.setPreco(rs.getBigDecimal("preco"));
+                p.setData_cadastro(rs.getTimestamp("data_cadastro"));
+                produtos.add(p);
+            }
+        }catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return produtos;
+    }
 
     // UPDATE
     public boolean atualizarProduto(Produto produto) {
