@@ -68,8 +68,6 @@ public class ProdutoDAO {
 
         return produtos;
     }
-<<<<<<< Updated upstream
-=======
     
     public List<Produto> listarProdutosUltimoMes() {
         
@@ -99,7 +97,6 @@ public class ProdutoDAO {
         }
         return produtos;
     }
->>>>>>> Stashed changes
 
     // UPDATE
     public boolean atualizarProduto(Produto produto) {

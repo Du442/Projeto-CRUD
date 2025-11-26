@@ -105,13 +105,13 @@ public class Estoque extends javax.swing.JFrame {
             jTableProdutos.getColumnModel().getColumn(2).setResizable(false);
             jTableProdutos.getColumnModel().getColumn(2).setPreferredWidth(100);
             jTableProdutos.getColumnModel().getColumn(3).setResizable(false);
-            jTableProdutos.getColumnModel().getColumn(3).setPreferredWidth(50);
+            jTableProdutos.getColumnModel().getColumn(3).setPreferredWidth(70);
             jTableProdutos.getColumnModel().getColumn(4).setResizable(false);
             jTableProdutos.getColumnModel().getColumn(4).setPreferredWidth(50);
             jTableProdutos.getColumnModel().getColumn(5).setResizable(false);
-            jTableProdutos.getColumnModel().getColumn(5).setPreferredWidth(150);
+            jTableProdutos.getColumnModel().getColumn(5).setPreferredWidth(120);
             jTableProdutos.getColumnModel().getColumn(6).setResizable(false);
-            jTableProdutos.getColumnModel().getColumn(6).setPreferredWidth(150);
+            jTableProdutos.getColumnModel().getColumn(6).setPreferredWidth(120);
         }
 
         b_cancelar.setText("Cancelar");
