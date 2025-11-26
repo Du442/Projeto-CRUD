@@ -58,7 +58,7 @@ public class ProdutoDAO {
                 p.setQuantidade_estoque(rs.getInt("quantidade_estoque"));
                 p.setPreco(rs.getBigDecimal("preco"));
                 p.setData_cadastro(rs.getTimestamp("data_cadastro"));
-
+                p.setData_alteracao(rs.getTimestamp("data_alteracao"));
                 produtos.add(p);
             }
 
@@ -68,10 +68,42 @@ public class ProdutoDAO {
 
         return produtos;
     }
+<<<<<<< Updated upstream
+=======
+    
+    public List<Produto> listarProdutosUltimoMes() {
+        
+        String sql = "SELECT * FROM produtos WHERE data_cadastro >= DATE_SUB(NOW(), INTERVAL 1 MONTH)";
+        
+        List <Produto> produtos = new ArrayList<>();
+        
+        try {
+            
+            Connection conn = Conexao.getConexao();
+            PreparedStatement pst = conn.prepareStatement(sql);
+            ResultSet rs = pst.executeQuery();
+            
+            while (rs.next()){
+                Produto p = new Produto();
+                p.setId_produto(rs.getInt("id_produto"));
+                p.setNome_produto(rs.getString("nome_produto"));
+                p.setDescricao_produto(rs.getString("descricao_produto"));
+                p.setQuantidade_estoque(rs.getInt("quantidade_estoque"));
+                p.setPreco(rs.getBigDecimal("preco"));
+                p.setData_cadastro(rs.getTimestamp("data_cadastro"));
+                p.setData_alteracao(rs.getTimestamp("data_alteracao"));
+                produtos.add(p);
+            }
+        }catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return produtos;
+    }
+>>>>>>> Stashed changes
 
     // UPDATE
     public boolean atualizarProduto(Produto produto) {
-        String sql = "UPDATE produtos SET nome_produto = ?, descricao_produto = ?, quantidade_estoque = ?, preco = ? " +
+        String sql = "UPDATE produtos SET nome_produto = ?, descricao_produto = ?, quantidade_estoque = ?, preco = ?, data_alteracao = NOW() " +
                      "WHERE id_produto = ?";
 
         try (Connection conn = Conexao.getConexao();

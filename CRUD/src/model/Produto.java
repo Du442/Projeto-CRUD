@@ -15,6 +15,7 @@ public class Produto {
     private int quantidade_estoque;
     private BigDecimal preco;
     private Date data_cadastro;
+    private Date data_alteracao;
 
     // DAO (igual funciona na classe Aluno)
     private final ProdutoDAO dao;
@@ -95,6 +96,14 @@ public class Produto {
     public void setData_cadastro(Date data_cadastro) {
         this.data_cadastro = data_cadastro;
     }
+
+public Date getData_alteracao() {
+    return data_alteracao;
+}
+
+public void setData_alteracao(Date data_alteracao) {
+    this.data_alteracao = data_alteracao;
+}
 
     @Override
     public String toString() {
