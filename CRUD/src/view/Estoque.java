@@ -70,21 +70,21 @@ public class Estoque extends javax.swing.JFrame {
 
         jTableProdutos.setModel(new javax.swing.table.DefaultTableModel(
             new Object [][] {
-                {null, null, null, null, null, null},
-                {null, null, null, null, null, null},
-                {null, null, null, null, null, null},
-                {null, null, null, null, null, null},
-                {null, null, null, null, null, null},
-                {null, null, null, null, null, null},
-                {null, null, null, null, null, null},
-                {null, null, null, null, null, null}
+                {null, null, null, null, null, null, null},
+                {null, null, null, null, null, null, null},
+                {null, null, null, null, null, null, null},
+                {null, null, null, null, null, null, null},
+                {null, null, null, null, null, null, null},
+                {null, null, null, null, null, null, null},
+                {null, null, null, null, null, null, null},
+                {null, null, null, null, null, null, null}
             },
             new String [] {
-                "ID", "Nome", "Descrição", "Quantidade", "Preço", "Data de Cadastro"
+                "ID", "Nome", "Descrição", "Quantidade", "Preço", "Data de Cadastro", "Data de Alteração"
             }
         ) {
             boolean[] canEdit = new boolean [] {
-                false, false, false, false, false, false
+                false, false, false, false, false, false, false
             };
 
             public boolean isCellEditable(int rowIndex, int columnIndex) {
@@ -105,11 +105,13 @@ public class Estoque extends javax.swing.JFrame {
             jTableProdutos.getColumnModel().getColumn(2).setResizable(false);
             jTableProdutos.getColumnModel().getColumn(2).setPreferredWidth(100);
             jTableProdutos.getColumnModel().getColumn(3).setResizable(false);
-            jTableProdutos.getColumnModel().getColumn(3).setPreferredWidth(100);
+            jTableProdutos.getColumnModel().getColumn(3).setPreferredWidth(70);
             jTableProdutos.getColumnModel().getColumn(4).setResizable(false);
             jTableProdutos.getColumnModel().getColumn(4).setPreferredWidth(50);
             jTableProdutos.getColumnModel().getColumn(5).setResizable(false);
-            jTableProdutos.getColumnModel().getColumn(5).setPreferredWidth(150);
+            jTableProdutos.getColumnModel().getColumn(5).setPreferredWidth(120);
+            jTableProdutos.getColumnModel().getColumn(6).setResizable(false);
+            jTableProdutos.getColumnModel().getColumn(6).setPreferredWidth(120);
         }
 
         b_cancelar.setText("Cancelar");
@@ -471,12 +473,23 @@ private NumberFormat formatador = NumberFormat.getCurrencyInstance(new Locale("p
             
          DateTimeFormatter f = DateTimeFormatter.ofPattern("dd/MM/yyyy HH:mm:ss");
 
-            LocalDateTime dataFormatada = p.getData_cadastro()
+            LocalDateTime dataFormatadac = p.getData_cadastro()
             .toInstant()
             .atZone(ZoneId.of("America/Sao_Paulo")) // corrige o fuso
             .toLocalDateTime();
+            String dataExibidac = dataFormatadac.format(f);
+            
+             String dataExibidaa;
 
-            String dataExibida = dataFormatada.format(f);
+if (p.getData_alteracao() != null) {
+    LocalDateTime dataAlt = p.getData_alteracao().toInstant()
+            .atZone(ZoneId.of("America/Sao_Paulo"))
+            .toLocalDateTime();
+
+    dataExibidaa = dataAlt.format(f);
+} else {
+    dataExibidaa = "";
+}
 
             modelo.addRow(new Object[]{
                 p.getId_produto(),
@@ -484,7 +497,8 @@ private NumberFormat formatador = NumberFormat.getCurrencyInstance(new Locale("p
                 p.getDescricao_produto(),
                 p.getQuantidade_estoque(),
                 precoFormatado,
-                dataExibida
+                dataExibidac,
+                dataExibidaa
             });
         }
 }

@@ -8,5 +8,7 @@ CREATE TABLE IF NOT EXISTS produtos (
     descricao_produto TEXT,
     quantidade_estoque INT NOT NULL DEFAULT 0,
     preco DECIMAL(10, 2) NOT NULL,
-    data_cadastro DATETIME DEFAULT CURRENT_TIMESTAMP
+    data_cadastro DATETIME DEFAULT CURRENT_TIMESTAMP,
+	data_alteracao DATETIME NULL
+
 );

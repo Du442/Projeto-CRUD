@@ -58,7 +58,7 @@ public class ProdutoDAO {
                 p.setQuantidade_estoque(rs.getInt("quantidade_estoque"));
                 p.setPreco(rs.getBigDecimal("preco"));
                 p.setData_cadastro(rs.getTimestamp("data_cadastro"));
-
+                p.setData_alteracao(rs.getTimestamp("data_alteracao"));
                 produtos.add(p);
             }
 
@@ -89,6 +89,8 @@ public class ProdutoDAO {
                 p.setQuantidade_estoque(rs.getInt("quantidade_estoque"));
                 p.setPreco(rs.getBigDecimal("preco"));
                 p.setData_cadastro(rs.getTimestamp("data_cadastro"));
+                p.setData_alteracao(rs.getTimestamp("data_alteracao"));
+              
                 produtos.add(p);
             }
         }catch (SQLException e) {
@@ -99,7 +101,7 @@ public class ProdutoDAO {
 
     // UPDATE
     public boolean atualizarProduto(Produto produto) {
-        String sql = "UPDATE produtos SET nome_produto = ?, descricao_produto = ?, quantidade_estoque = ?, preco = ? " +
+        String sql = "UPDATE produtos SET nome_produto = ?, descricao_produto = ?, quantidade_estoque = ?, preco = ?, data_alteracao = NOW() " +
                      "WHERE id_produto = ?";
 
         try (Connection conn = Conexao.getConexao();
