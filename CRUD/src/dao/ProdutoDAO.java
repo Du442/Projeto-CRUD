@@ -90,6 +90,7 @@ public class ProdutoDAO {
                 p.setPreco(rs.getBigDecimal("preco"));
                 p.setData_cadastro(rs.getTimestamp("data_cadastro"));
                 p.setData_alteracao(rs.getTimestamp("data_alteracao"));
+              
                 produtos.add(p);
             }
         }catch (SQLException e) {

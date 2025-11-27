@@ -353,107 +353,105 @@ public class Estoque extends javax.swing.JFrame {
 
    
 
-private void gerarRelatorioPDF(File file) throws IOException, DocumentException {
+private void gerarRelatorioPDF(File file, List<Produto> listaDeDados, String tituloRelatorio) throws IOException, DocumentException {
     
-
-    TableModel model = jTableProdutos.getModel(); 
-
-
     Document document = new Document(PageSize.A4.rotate(), 30, 30, 30, 30);
-    
     PdfWriter.getInstance(document, new FileOutputStream(file));
-    
-
     document.open();
 
-
     Font fonteTitulo = new Font(Font.FontFamily.HELVETICA, 18, Font.BOLD);
-    Paragraph titulo = new Paragraph("Relatório de Estoque de Produtos", fonteTitulo);
+    Paragraph titulo = new Paragraph(tituloRelatorio, fonteTitulo);
     titulo.setAlignment(Element.ALIGN_CENTER);
-    titulo.setSpacingAfter(20); // Espaço depois do título
+    titulo.setSpacingAfter(20);
     document.add(titulo);
 
-    PdfPTable pdfTable = new PdfPTable(model.getColumnCount());
-    pdfTable.setWidthPercentage(100); 
+    PdfPTable pdfTable = new PdfPTable(5); 
+    pdfTable.setWidthPercentage(100);
 
+    String[] colunas = {"ID", "Nome", "Descrição", "Preço", "Qtd"};
     Font fonteCabecalho = new Font(Font.FontFamily.HELVETICA, 12, Font.BOLD, BaseColor.WHITE);
     
-    for (int i = 0; i < model.getColumnCount(); i++) {
-       
-        PdfPCell cell = new PdfPCell(new Paragraph(model.getColumnName(i), fonteCabecalho));
-        
+    for (String col : colunas) {
+        PdfPCell cell = new PdfPCell(new Paragraph(col, fonteCabecalho));
         cell.setBackgroundColor(BaseColor.GRAY);
         cell.setHorizontalAlignment(Element.ALIGN_CENTER);
-        cell.setVerticalAlignment(Element.ALIGN_MIDDLE);
-        
         pdfTable.addCell(cell);
     }
 
-    
     Font fonteDados = new Font(Font.FontFamily.HELVETICA, 10, Font.NORMAL);
+    NumberFormat formatador = NumberFormat.getCurrencyInstance(new Locale("pt", "BR"));
 
-    for (int row = 0; row < model.getRowCount(); row++) {
-        for (int col = 0; col < model.getColumnCount(); col++) {
-           
-            Object value = model.getValueAt(row, col);
-            String texto = (value == null) ? "" : value.toString();
-            
-            
-            PdfPCell cell = new PdfPCell(new Paragraph(texto, fonteDados));
-            cell.setHorizontalAlignment(Element.ALIGN_LEFT);
-            cell.setPadding(4);
-           
-            pdfTable.addCell(cell);
-        }
+    for (Produto p : listaDeDados) {
+        pdfTable.addCell(new Paragraph(String.valueOf(p.getId_produto()), fonteDados));
+        pdfTable.addCell(new Paragraph(p.getNome_produto(), fonteDados));
+        pdfTable.addCell(new Paragraph(p.getDescricao_produto(), fonteDados));
+        pdfTable.addCell(new Paragraph(formatador.format(p.getPreco()), fonteDados));
+        pdfTable.addCell(new Paragraph(String.valueOf(p.getQuantidade_estoque()), fonteDados));
     }
 
     document.add(pdfTable);
-    
     document.close();
 }
     
+
+
     private void btnExportarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnExportarActionPerformed
 
-        
-        JFileChooser fileChooser = new JFileChooser();
-    fileChooser.setDialogTitle("Salvar Relatório PDF");
-    
-   
+    Object[] opcoes = {"Geral (Tudo)", "Mensal (Últimos 30 dias)"};
+    int escolha = JOptionPane.showOptionDialog(this,
+            "Qual tipo de relatório deseja gerar?",
+            "Tipo de Relatório",
+            JOptionPane.YES_NO_OPTION,
+            JOptionPane.QUESTION_MESSAGE,
+            null,
+            opcoes,
+            opcoes[0]);
+
+    if (escolha == -1) return;
+
+    List<Produto> listaParaImprimir;
+    String tituloDoPDF;
+    ProdutoDAO dao = new ProdutoDAO();
+
+    if (escolha == 0) { 
+        listaParaImprimir = dao.listarProdutos();
+        tituloDoPDF = "Relatório Geral de Estoque";
+    } else { 
+        listaParaImprimir = dao.listarProdutosUltimoMes(); 
+        tituloDoPDF = "Relatório Mensal (Novos Produtos)";
+    }
+
+    if (listaParaImprimir.isEmpty()) {
+        JOptionPane.showMessageDialog(this, "Não há dados para este relatório.");
+        return;
+    }
+
+    JFileChooser fileChooser = new JFileChooser();
+    fileChooser.setDialogTitle("Salvar PDF");
     fileChooser.setFileFilter(new FileNameExtensionFilter("Arquivos PDF (*.pdf)", "pdf"));
-    
-    
-    fileChooser.setSelectedFile(new File("relatorio_estoque.pdf"));
+    fileChooser.setSelectedFile(new File("relatorio.pdf"));
 
     int userSelection = fileChooser.showSaveDialog(this);
 
     if (userSelection == JFileChooser.APPROVE_OPTION) {
-            File fileToSave = fileChooser.getSelectedFile();
-
-            
-            String filePath = fileToSave.getAbsolutePath();
-            if (!filePath.endsWith(".pdf")) {
-                fileToSave = new File(filePath + ".pdf");
-            }
-
-            try {
-                
-                gerarRelatorioPDF(fileToSave);
-
-                
-                int resposta = JOptionPane.showConfirmDialog(this, 
-                        "Relatório gerado com sucesso!\nDeseja abrir o arquivo?", 
-                        "Sucesso", JOptionPane.YES_NO_OPTION);
-
-                if (resposta == JOptionPane.YES_OPTION) {
-                    
-                    Desktop.getDesktop().open(fileToSave);
-                }
-
-            } catch (IOException | DocumentException ex) {
-                ex.printStackTrace();
-                JOptionPane.showMessageDialog(this, "Erro ao gerar o PDF: " + ex.getMessage(), "Erro", JOptionPane.ERROR_MESSAGE);
-            }
+        File fileToSave = fileChooser.getSelectedFile();
+        if (!fileToSave.getAbsolutePath().endsWith(".pdf")) {
+            fileToSave = new File(fileToSave.getAbsolutePath() + ".pdf");
         }
+
+        try {
+          
+            gerarRelatorioPDF(fileToSave, listaParaImprimir, tituloDoPDF);
+            
+            int abrir = JOptionPane.showConfirmDialog(this, "Sucesso! Abrir arquivo?", "Fim", JOptionPane.YES_NO_OPTION);
+            if (abrir == JOptionPane.YES_OPTION) {
+                Desktop.getDesktop().open(fileToSave);
+            }
+        } catch (Exception ex) {
+            ex.printStackTrace();
+            JOptionPane.showMessageDialog(this, "Erro: " + ex.getMessage());
+        }
+    }
     }//GEN-LAST:event_btnExportarActionPerformed
 
     @SuppressWarnings("unchecked")
