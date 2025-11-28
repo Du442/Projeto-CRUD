@@ -37,6 +37,7 @@ public class TelaInicio extends javax.swing.JFrame {
         buttonGroup1 = new javax.swing.ButtonGroup();
         buttonGroup2 = new javax.swing.ButtonGroup();
         jComboBox2 = new javax.swing.JComboBox<>();
+        sairBtn = new javax.swing.JButton();
 
         jMenu1.setText("jMenu1");
 
@@ -59,13 +60,25 @@ public class TelaInicio extends javax.swing.JFrame {
             }
         });
 
+        sairBtn.setText("Sair");
+        sairBtn.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                sairBtnActionPerformed(evt);
+            }
+        });
+
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
         layout.setHorizontalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(layout.createSequentialGroup()
-                .addGap(195, 195, 195)
-                .addComponent(jComboBox2, javax.swing.GroupLayout.PREFERRED_SIZE, 210, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addGroup(layout.createSequentialGroup()
+                        .addGap(195, 195, 195)
+                        .addComponent(jComboBox2, javax.swing.GroupLayout.PREFERRED_SIZE, 210, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addGroup(layout.createSequentialGroup()
+                        .addGap(32, 32, 32)
+                        .addComponent(sairBtn)))
                 .addContainerGap(195, Short.MAX_VALUE))
         );
         layout.setVerticalGroup(
@@ -73,7 +86,9 @@ public class TelaInicio extends javax.swing.JFrame {
             .addGroup(layout.createSequentialGroup()
                 .addGap(75, 75, 75)
                 .addComponent(jComboBox2, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addContainerGap(399, Short.MAX_VALUE))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 348, Short.MAX_VALUE)
+                .addComponent(sairBtn)
+                .addGap(28, 28, 28))
         );
 
         pack();
@@ -100,6 +115,19 @@ switch (opcao) {
             }
 }     
     }//GEN-LAST:event_jComboBox2ActionPerformed
+
+    private void sairBtnActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_sairBtnActionPerformed
+        int resposta = javax.swing.JOptionPane.showConfirmDialog(
+            this,
+            "Deseja REALMENTE sair do programa?",
+            "Sair",
+            javax.swing.JOptionPane.YES_NO_OPTION
+        );
+        
+        if (resposta == javax.swing.JOptionPane.YES_OPTION) {
+            System.exit(0);
+        }
+    }//GEN-LAST:event_sairBtnActionPerformed
 
     /**
      * @param args the command line arguments
@@ -134,5 +162,6 @@ switch (opcao) {
     private javax.swing.JMenu jMenu1;
     private javax.swing.JMenu jMenu2;
     private javax.swing.JMenu jMenu5;
+    private javax.swing.JButton sairBtn;
     // End of variables declaration//GEN-END:variables
 }
