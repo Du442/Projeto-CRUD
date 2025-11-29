@@ -133,6 +133,26 @@ public class ProdutoDAO {
         }
         return produtos;
     }
+    
+    public boolean existeProdutoComNome(String nome, int idParaIgnorar) {
+        String sql = "SELECT COUNT(*) FROM produtos WHERE nome_produto = ? AND id_produto != ?";
+        
+        try (java.sql.Connection conn = connection.Conexao.getConexao();
+             java.sql.PreparedStatement pst = conn.prepareStatement(sql)) {
+            
+            pst.setString(1, nome);
+            pst.setInt(2, idParaIgnorar);
+            
+            java.sql.ResultSet rs = pst.executeQuery();
+            if (rs.next()) {
+                return rs.getInt(1) > 0;
+            }
+            
+        } catch (java.sql.SQLException e) {
+            e.printStackTrace();
+        }
+        return false;
+    }
 
     // UPDATE
     public boolean atualizarProduto(Produto produto) {

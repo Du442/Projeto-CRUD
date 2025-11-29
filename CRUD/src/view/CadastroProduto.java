@@ -161,6 +161,13 @@ public class CadastroProduto extends javax.swing.JFrame {
             } else {
                 nome = this.c_nome.getText();
             }
+            
+            dao.ProdutoDAO dao = new dao.ProdutoDAO();
+            
+            if (dao.existeProdutoComNome(nome, 0)) { 
+                JOptionPane.showMessageDialog(this, "Erro: Já existe um produto com o nome '" + nome + "'");
+                return;
+            }
 
             if (this.c_preco.getText().length() <= 0) {
                 throw new Mensagens("Preço deve ser número e maior que zero.");

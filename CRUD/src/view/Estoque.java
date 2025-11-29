@@ -241,72 +241,73 @@ public class Estoque extends javax.swing.JFrame {
     private void b_alterarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_b_alterarActionPerformed
 
        try {
-        // recebendo e validando dados da interface gráfica.
-        int id = 0;
-        String nome;
-        String descricao;
-        int quantidade;
-        BigDecimal preco;
+        
+        int linhaSelecionada = this.jTableProdutos.getSelectedRow();
+            if (linhaSelecionada == -1) {
+                throw new Exception("Primeiro selecione um produto na tabela para alterar.");
+            }
+        
+        int id_produto = Integer.parseInt(this.jTableProdutos.getValueAt(linhaSelecionada, 0).toString());
 
-            if (this.c_nome.getText().length() < 2) {
-            throw new Mensagens("Nome deve conter ao menos 2 caracteres.");
-        } else {
-            nome = this.c_nome.getText();
-        }
+        String nome = this.c_nome.getText();
+        String descricao = this.c_descricao.getText();
 
-        if (this.c_descricao.getText().length() < 2) {
-            throw new Mensagens("Descrição deve conter ao menos 2 caracteres.");
-        } else {
-            descricao = this.c_descricao.getText();
-        }
+        if (nome.length() < 2) throw new Exception("Nome deve conter ao menos 2 caracteres.");
+        if (descricao.length() < 2) throw new Exception("Descrição deve conter ao menos 2 caracteres.");
 
-        if (this.c_quantidade.getText().length() <= 0) {
-            throw new Mensagens("Quantidade deve ser número e maior que zero.");
-        } else {
-            quantidade = Integer.parseInt(this.c_quantidade.getText());
-        }
-
+        int quantidade = 0;
         try {
-            preco = new BigDecimal(this.c_preco.getText());
+            if (this.c_quantidade.getText().isEmpty()) throw new Exception("Informe a quantidade.");
+            quantidade = Integer.parseInt(this.c_quantidade.getText());
+            if (quantidade <= 0) throw new Exception("Quantidade deve ser maior que zero.");
+        } catch (NumberFormatException e) {
+            throw new Exception("Quantidade inválida.");
+        }
+
+        BigDecimal preco = BigDecimal.ZERO;
+        try {
+            String precoTexto = this.c_preco.getText();
+            precoTexto = precoTexto.replace("R$", "")
+                                   .replace(" ", "")
+                                   .replace(".", "")
+                                   .replace(",", ".");
+                
+            preco = new BigDecimal(precoTexto);
+                
+            if (preco.compareTo(BigDecimal.ZERO) <= 0) {
+                throw new Exception("Preço deve ser maior que zero.");
+            }
         } catch (Exception e) {
-            throw new Mensagens("Preço inválido! Use apenas números e ponto (ex: 10.50)");
+            throw new Exception("Preço inválido.");
+        }
+            
+        ProdutoDAO dao = new ProdutoDAO();
+            
+        if (dao.existeProdutoComNome(nome, id_produto)) {
+            JOptionPane.showMessageDialog(this, "Erro: Já existe outro produto com o nome '" + nome + "'");
+            return;
         }
 
+        Produto objAlterado = new Produto();
+        objAlterado.setId_produto(id_produto);
+        objAlterado.setNome_produto(nome);
+        objAlterado.setDescricao_produto(descricao);
+        objAlterado.setQuantidade_estoque(quantidade);
+        objAlterado.setPreco(preco);
 
-          if (this.jTableProdutos.getSelectedRow() == -1) {
-            throw new Mensagens("Primeiro selecione um produto para alterar.");
-        } else {
-            id = Integer.parseInt(this.jTableProdutos
-                    .getValueAt(this.jTableProdutos.getSelectedRow(), 0)
-                    .toString());
+        dao.atualizarProduto(objAlterado);
+
+        JOptionPane.showMessageDialog(this, "Produto atualizado com sucesso!");
+            
+        this.c_nome.setText("");
+        this.c_descricao.setText("");
+        this.c_quantidade.setText("");
+        this.c_preco.setText("");
+        carregaTabela();
+
+        } catch (Exception erro) {
+            JOptionPane.showMessageDialog(this, "Erro: " + erro.getMessage());
         }
-
-            Produto produto = new Produto();
-            produto.setId_produto(id);
-            produto.setNome_produto(nome);
-            produto.setDescricao_produto(descricao);
-            produto.setQuantidade_estoque(quantidade);
-            produto.setPreco(preco);
-
-            // envia os dados pro aluno processa
-            ProdutoDAO dao = new ProdutoDAO();
-            if (dao.atualizarProduto(produto)) {
-
-           this.c_nome.setText("");
-            this.c_descricao.setText("");
-            this.c_quantidade.setText("");
-            this.c_preco.setText("");
-
-            JOptionPane.showMessageDialog(rootPane, "Produto atualizado com sucesso!");
-        }
-
-             } catch (Mensagens erro) {
-                JOptionPane.showMessageDialog(null, erro.getMessage());
-            } catch (NumberFormatException erro2) {
-                JOptionPane.showMessageDialog(null, "Informe um número válido.");
-            } finally {
-                 carregaTabela();
-    }
         
     }//GEN-LAST:event_b_alterarActionPerformed
 
