@@ -98,6 +98,61 @@ public class ProdutoDAO {
         }
         return produtos;
     }
+    
+    public List<Produto> listarProdutosComFiltro(int tipoOrdenacao) {
+        
+        String sql = "SELECT * FROM produtos ORDER BY ";
+        
+        switch (tipoOrdenacao) {
+            case 3: sql += "preco ASC"; break;              
+            case 4: sql += "preco DESC"; break;             
+            case 2: sql += "quantidade_estoque DESC"; break; 
+            case 1: sql += "data_cadastro DESC"; break;     
+            default: sql += "nome_produto ASC"; break;      
+        }
+        
+        java.util.List<Produto> produtos = new java.util.ArrayList<>();
+
+        try (Connection conn = Conexao.getConexao();
+             PreparedStatement pst = conn.prepareStatement(sql);
+             ResultSet rs = pst.executeQuery()) {
+
+            while (rs.next()) {
+                Produto p = new Produto();
+                p.setId_produto(rs.getInt("id_produto"));
+                p.setNome_produto(rs.getString("nome_produto"));
+                p.setDescricao_produto(rs.getString("descricao_produto"));
+                p.setQuantidade_estoque(rs.getInt("quantidade_estoque"));
+                p.setPreco(rs.getBigDecimal("preco"));
+                p.setData_cadastro(rs.getTimestamp("data_cadastro"));
+                p.setData_alteracao(rs.getTimestamp("data_alteracao"));
+                produtos.add(p);
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return produtos;
+    }
+    
+    public boolean existeProdutoComNome(String nome, int idParaIgnorar) {
+        String sql = "SELECT COUNT(*) FROM produtos WHERE nome_produto = ? AND id_produto != ?";
+        
+        try (java.sql.Connection conn = connection.Conexao.getConexao();
+             java.sql.PreparedStatement pst = conn.prepareStatement(sql)) {
+            
+            pst.setString(1, nome);
+            pst.setInt(2, idParaIgnorar);
+            
+            java.sql.ResultSet rs = pst.executeQuery();
+            if (rs.next()) {
+                return rs.getInt(1) > 0;
+            }
+            
+        } catch (java.sql.SQLException e) {
+            e.printStackTrace();
+        }
+        return false;
+    }
 
     // UPDATE
     public boolean atualizarProduto(Produto produto) {
